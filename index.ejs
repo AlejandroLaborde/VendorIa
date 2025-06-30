@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= titulo %>
+    </title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="shortcut icon" href="/img/favicon.ico" >
+    
+</head>
+
+<body>
+    <div class="container">
+        <div class=" row mt-3">
+            
+            
+            <div class="col-md-6 mt-5 text-center">
+                <!-- <img src="/img/foto.png" alt="foto del chat"> -->
+                <div style="display: flex;justify-content: center;align-items: center;">
+                    <h1 style="display: flex;justify-content: center;">
+                        Chatbot 
+                    </h1>
+                    <img src="/img/logoCompany.jpg" width="75px" height="75px" style="border-radius: 50%;" alt="Cinque Terre">
+                    
+                </div>
+                <img class="img-fluid" src="/img/bot.gif" alt="foto del chat">
+            </div>
+            
+                    <!--🟥🟥🟥🟥 Esta linea de codigo controla la visualizacion en base al estado... NO ELIMINAR🟥🟥 -->
+                    <input style="display: none;"  type="text" id="session" <%= (otraSession) ? "value=true" : "value=false" %>>
+                    <input style="display: none;"  type="text" id="clientReady" <%= (clientReady) ? "value=true" : "value=false" %>>
+                
+                    <% if(otraSession){ %>
+                   <div  class="col-md-6 mt-5 text-center" style="align-self: center;">
+                           <h4 class="rojo">Whatsapp esta abierto en otra sesión</h4>
+                           <h4>Pulsar "USAR AQUI" para volver a ejecutar el chatbot</h4>       
+                           <button onclick="reconectar()" class="btn btn-success btn-lg active" role="button" aria-pressed="true">USAR AQUI</button>
+                           <a href="/desconectar" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Cerrar Sesión</a>
+                   </div>
+                   <% } %>
+                
+
+                
+                    
+                    <% if(clientReady && !otraSession){ %>
+                <div  class="col-md-6 mt-5 text-center" style="align-self: center;">
+                    <!-- Contenedor para la consola -->
+    <div id="consoleOutputBox" style="background-color: #f4f4f4; padding: 10px; margin-top: 20px; border: 1px solid #ddd; height: 200px; overflow-y: auto;">
+        <h3>Consola de Salidas:</h3>
+        <pre id="consoleOutput"></pre>  <!-- Mostramos las salidas de la consola aquí -->
+    </div>
+
+   
+                        
+                        <button onclick="actualizaEstado()" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Actualizar Estado</button>
+                        <a href="/desconectar" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Cerrar Sesión</a>
+                    </div>
+                    <% } %>
+
+                    
+                   
+                    <%  if(!clientReady){ %>
+                            <div  class="col-md-6 mt-5" style="align-self: center;">
+                                <div style="display: flex; justify-content: center;">
+                                    <img width="60%" id="waqrcode" src="https://media.tenor.com/images/a742721ea2075bc3956a2ff62c9bfeef/tenor.gif"><br>
+                                </div>
+                                <div style="display: flex; justify-content: center;">
+                                    <p>*Presione actualizar para cargar un nuevo codigo QR</p>
+                                </div>
+                                <div style="display: flex; justify-content: center;">
+                                    <button onclick="actualizaQR()" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Actualizar</button>
+                                </div>
+                            </div>
+                    <% } %>
+               
+            </div>
+
+        </div>
+        <div style="display: flex; justify-content: center; height: 10vh; align-items: center; background-color: whitesmoke;position: absolute;
+        bottom: 0;
+        width: 100%; " >
+            <span>
+                @2021 ChatBot developed by &nbsp;
+            </span>
+            <img src="/img/colossus.png" width="100px" alt="Cinque Terre">
+        </div>
+    </div>
+  <!-- JavaScript para manejar SSE y actualizar la consola en tiempo real -->
+  <script>
+    // Establecer la conexión SSE
+    const eventSource = new EventSource('/events');
+
+    eventSource.onmessage = function(event) {
+        // Actualizamos el contenido del div con la salida de consola
+        document.getElementById('consoleOutput').textContent = event.data;
+    };
+</script>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
